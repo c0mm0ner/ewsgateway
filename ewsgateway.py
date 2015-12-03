@@ -488,12 +488,16 @@ class DeviceSelectDialog(object):
                     self.quit()
                     for sp in SUDO_PROGS:
                         try:
-                            os.execvp(sp, [sp, sys.executable, __file__])
-                            sys.exit(0)
+                            if sp == 'sudo':
+		                if os.isatty(0):
+                                    os.execvp(sp, [sp, sys.executable, __file__])
+                            else:
+                                os.execvp(sp, [sp, sys.executable, __file__])
+                                sys.exit(0)
                         except OSError:
                             pass
                     
-                    tkMessageBox.showerror("Error", "Could not run gksudo or kdesu.")
+                    tkMessageBox.showerror("Error", "Could not run sudo, gksudo or kdesu.")
                     sys.exit(0)
                 
         
