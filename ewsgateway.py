@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 
 # ewsgateway.py: A simple gateway to access the Embedded Web Server
 # (EWS) on several models of HP printers via USB.
@@ -28,6 +28,13 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+
+# Copyright (C) 2015 c0mm0ner projekt@w3b0.de
+# Small changes for running ewsgateway on Archlinux
+#   - shebang changed to python2
+#   - catching usb.USBError on dev.open()
+#   - added plain sudo as an option for privilege escalation
+
 import sys
 import os
 import usb
@@ -56,7 +63,7 @@ def filter_interface(dev, dh, intf, name):
 HOST = 'localhost'
 DEFAULT_PORT = 9980
 
-SUDO_PROGS = ('gksudo', 'kdesudo', 'gksu', 'kdesu')
+SUDO_PROGS = ('sudo', 'gksudo', 'kdesudo', 'gksu', 'kdesu')
 
 
 def getstr(dh, i):
@@ -72,10 +79,17 @@ def get_devices():
     devs = []
     for bus in usb.busses():
         for dev in bus.devices:
-            dh = dev.open()
-            ven = getstr(dh, dev.iManufacturer)
-            mdl = getstr(dh, dev.iProduct)
-            ser = getstr(dh, dev.iSerialNumber)
+            try:
+                dh = dev.open()
+            except usb.USBError:
+                fail = True
+                continue
+            
+            if fail is not True:
+                ven = getstr(dh, dev.iManufacturer)
+                mdl = getstr(dh, dev.iProduct)
+                ser = getstr(dh, dev.iSerialNumber)
+
             if ven is None or mdl is None or ser is None:
                 fail = True
                 continue
