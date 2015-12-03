@@ -22,3 +22,10 @@
 # THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+#Copyright (C) 2015 c0mm0ner projekt@w3b0.de
+# Small changes for running ewsgateway on Archlinux
+#   - shebang changed to python2
+#   - catching usb.USBError on dev.open()
+#   - added plain sudo as an option for privilege escalation
+
